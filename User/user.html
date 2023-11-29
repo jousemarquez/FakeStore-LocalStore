@@ -9,6 +9,8 @@
   <link rel="stylesheet" href="../Assets/CSS/style.css">
   <!-- LitElements-->
   <script src="https://unpkg.com/@webcomponents/webcomponentsjs@latest/webcomponents-loader.js"></script>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.1.1/css/all.css"
+    integrity="sha384-/frq1SRXYH/bSyou/HUp/hib7RVN1TawQYja658FEOodR/FQBKVqT9Ol+Oz3Olq5" crossorigin="anonymous">
   <title>FakeShop</title>
 </head>
 
@@ -26,7 +28,8 @@
           <li><a href="../index.html">Home</a></li>
           <li><a href="../Products/index.html">Products</a></li>
           <li><a href="../Clients/index.html">Clients</a></li>
-          <li><div id="loggedInUserDisplay" class="active"></div></li>
+          <li><a class="active" href="../User/user.html"><i class="fa-solid fa-user fa-2xs"></i></a></li>
+          <li><div id="loggedInUserDisplay"></div></li>
           <li><button type="button" id="login-logout-button">Login</button></li>
         </ul>
         <div class="hamburger-menu">
@@ -76,6 +79,7 @@
   <div id="error-container"></div>
   <div id="loading" style="display:none"></div>
 
+  <script src="../Assets/JS/Script.js"></script>
   <script src="./Assets/JS/Script.js" defer></script>
   <script src="../Assets/JS/404.js" defer></script>
 
