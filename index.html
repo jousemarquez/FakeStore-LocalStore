@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/jpg" href="./Assets/img/logo.jpg">
+  <link rel="stylesheet" href="../Assets/CSS/style.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.1.1/css/all.css"
+    integrity="sha384-/frq1SRXYH/bSyou/HUp/hib7RVN1TawQYja658FEOodR/FQBKVqT9Ol+Oz3Olq5" crossorigin="anonymous">
+  <!-- font awesome -->
+  <!-- LitElements-->
+  <script src="https://unpkg.com/@webcomponents/webcomponentsjs@latest/webcomponents-loader.js"></script>
+  <title>FakeShop</title>
+</head>
+
+<body>
+
+  <header>
+    <div class="wrapper" id="wrapper">
+      <nav class="navbar">
+        <div class="brand">
+          <a href="./index.html">
+            <h2><span id="fake">FAKE</span><span id="raya">-</span><span id="store">SHOP</span></h2>
+          </a>
+        </div>
+        <ul class="menu">
+          <li><a class="active" href="./index.html">Home</a></li>
+          <li><a href="./Products/index.html">Products</a></li>
+          <li><a href="./Clients/index.html">Clients</a></li>
+          <li><a href="./User/user.html"><i class="fa-solid fa-user fa-2xs"></a></i><div id="loggedInUserDisplay"></div></li>
+          <li><button type="button" id="login-logout-button">Login</button></li>
+        </ul>
+        <div class="hamburger-menu">
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
+        </div>
+      </nav>
+    </div>
+  </header>
+  
+
+  <main>
+    <div class="about" id="about"> <!-- About -->
+      <img class="images" src="./Assets/img/logo.jpg" alt="Brand" draggable="false" id="image-about">
+      <div class="about-info"> <!-- Información -->
+        <h2>Just purchase for NOTHING</h2> <!-- Título -->
+        <p>Being scammed in just two clicks.</p>
+      </div>
+      
+    </div>
+  </main>
+  <!-------------------------------------------------------------------------->
+  <footer class="footer"> <!-- Pie de página -->
+    <div class="footer-content">
+      <h2>Jouse Márquez</h2>
+      <h5>Frontend Developer</h5>
+    </div>
+    <div class="social-network"> <!-- Redes sociales -->
+      <a href="https://github.com/jousemarquez" target="_blank"><i class="fa-brands fa-github-square"></i></a>
+      <a href="https://www.instagram.com/jousemarquez/" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+    </div>
+  </footer>
+
+  <!-- Blob Background -->
+  <div>
+    <div class="wave"></div>
+    <div class="wave"></div>
+    <div class="wave"></div>
+  </div>
+
+  <div id="error-container"></div>
+  <div id="loading" style="display:none"></div>
+
+  <script src="./Assets/JS/Script.js" defer></script>
+  <script src="./Assets/JS/404.js" defer></script>
+
+</body>
+
+</html>

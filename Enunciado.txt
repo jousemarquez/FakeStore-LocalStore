@@ -1,0 +1,55 @@
+Enunciado:
+El trabajo consiste en crear una página web que consuma la api
+https://fakestoreapi.com/docs, la cual nos ayudará a tener el esquema
+de una tienda web. Dado que en las apis de prueba no se modifican los
+datos (a pesar de existir los endpoints para ello), el alumno deberá
+hacer uso del LocalStorage para almacenar los nuevos datos, ya sean
+datos insertados, datos actualizados o datos eliminados. Estos datos
+deberán complementarse con los datos de la api a la hora de mostrar la
+información.
+El alumno, además, deberá hacer uso de la SessionStorage para
+gestionar el inicio de sesión en la página. Un usuario no logueado no
+podrá acceder a la información de la página, y se le deberá indicar que
+se loguee o registre. Al loguearse, se guardará este usuario en la
+SessionStorage.
+Para aprobar, el alumno deberá cumplir los siguientes puntos:
+- Tener una estructura web apropiada.
+- Compaginar los datos que se obtienen de la api con los datos que
+se almacenan en el LocalStorage.
+- Hacer uso del LocalStorage y del SessionStorage para registro y
+login de usuario.
+- Modelización del problema mediante objetos de JS.
+- Mostrar los datos obtenidos de una manera amigable a la vista.
+Programar para ésto funciones que dados unos datos te creen un
+componente.
+
+- Gestionar los eventos necesarios (Tanto para añadir eventos
+como para prevenirlos).
+- Manipulación del DOM mediante objetos. Queda prohibido
+hardcodear el html en tu archivo js.
+- Hacer un buen uso de los mecanismos de programación
+asíncrona, gestionando sus posibles errores.
+- Hacer uso del sistema de control de versiones GIT.
+Y tener como mínimo los siguientes apartados en su página:
+- Login y Registro.
+- Ver todos los productos.
+- Al pulsar un producto, poder ver la página de ese producto tan
+solo.
+- Ver productos por categoría.
+- Añadir productos
+- Borrar o actualizar cada producto en su página propia.
+- Desarrollar un carrito de compra, donde se añadirán y se quitarán
+productos. Este carrito de la compra no se guardará hasta que se
+pulse en confirmar compra.
+- Página de perfil del usuario registrado. Aquí se mostrará su
+información personal y sus carritos de compras del pasado. Al
+clickar sobre un carrito de compra, se mostrará la información de
+ese carrito.
+Para el resto de la nota, se deben cumplir los siguientes puntos:
+- Buenas prácticas: uso de comentarios, tratamiento de errores,
+refactorización de código... (0.5 puntos)
+- Fichero Readme con información COMPLETA de la aplicación (No
+se aceptarán ficheros muy básicos). (0.5 puntos)
+- Uso de todos los endpoints de la api. (2 puntos)
+- Uso de litelement para la creación de componentes web (No se
+permite el uso de node, deberá usarse con unpkg) (2 puntos)
