@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/jpg" href="../Assets/img/logo.jpg">
+  <link rel="stylesheet" href="../Assets/CSS/style.css">
+  <!-- LitElements-->
+  <script src="https://unpkg.com/@webcomponents/webcomponentsjs@latest/webcomponents-loader.js"></script>
+  <title>FakeShop</title>
+</head>
+
+<body>
+
+  <header>
+    <div class="wrapper" id="wrapper">
+      <nav class="navbar">
+        <div class="brand">
+          <a href="./index.html">
+            <h2><span id="fake">FAKE</span><span id="raya">-</span><span id="store">SHOP</span></h2>
+          </a>
+        </div>
+        <ul class="menu">
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="../Products/index.html">Products</a></li>
+          <li><a href="../Clients/index.html">Clients</a></li>
+          <li><div id="loggedInUserDisplay" class="active"></div></li>
+          <li><button type="button" id="login-logout-button">Login</button></li>
+        </ul>
+        <div class="hamburger-menu">
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
+        </div>
+      </nav>
+    </div>
+  </header>
+  
+
+  <main>
+    <section class="user-profile">
+      <h1>User Profile</h1>
+      <div class="user-info">
+        <h2>User Information</h2>
+      </div>
+  
+      <div class="past-carts">
+        <h2>Past Shopping Carts</h2>
+        <ul class="cart-list" id="cart-list">
+        </ul>
+      </div>
+    </section>
+  </main>
+  
+  <!-------------------------------------------------------------------------->
+  <footer class="footer"> <!-- Pie de página -->
+    <div class="footer-content">
+      <h2>Jouse Márquez</h2>
+      <h5>Frontend Developer</h5>
+    </div>
+    <div class="social-network"> <!-- Redes sociales -->
+      <a href="https://github.com/jousemarquez" target="_blank"><i class="fa-brands fa-github-square"></i></a>
+      <a href="https://www.instagram.com/jousemarquez/" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+    </div>
+  </footer>
+
+  <!-- Blob Background -->
+  <div>
+    <div class="wave"></div>
+    <div class="wave"></div>
+    <div class="wave"></div>
+  </div>
+
+  <div id="error-container"></div>
+  <div id="loading" style="display:none"></div>
+
+  <script src="./Assets/JS/Script.js" defer></script>
+  <script src="../Assets/JS/404.js" defer></script>
+
+</body>
+
+</html>
