@@ -1,7 +1,7 @@
 // Check if user is logged. In case of Visitor, redirect to login path.
 const isLogged = sessionStorage.getItem('loggedInUser') !== null;
 if (!isLogged && window.location.pathname !== "/Login/index.html") {
-    window.location.href = "../Login/index.html";
+    window.location.href = "/Login/index.html";
 }
 
 document.addEventListener('DOMContentLoaded', function () {
