@@ -498,12 +498,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 function viewMore(id) {
-    window.location = `./product.html?${id}`;
+    window.location = `./product.html?id=${id}`;
 }
 
 
 // Función para imprimir el carrito
-const printCarrito = async () => {
+const printCarrito = async (cart) => {
     try {
         const carritoProds = document.getElementById('list-cart');
         let cart = JSON.parse(sessionStorage.getItem('cart')) || { products: [] };
@@ -512,7 +512,7 @@ const printCarrito = async () => {
         carritoProds.innerHTML = '';
 
         for (const productCart of cart.products) {
-            const id = productCart.id; // Assuming productCart has an "id" property
+            const id = productCart.id;
             const product = await getProductById(id); // Assuming there's a function to get product details by ID
 
             if (product) {
