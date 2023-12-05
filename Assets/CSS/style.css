@@ -82,7 +82,7 @@ body {
 .menu a {
   color: var(--white-light);
   text-decoration: none;
-  font-size: 1.7em;
+  font-size: 1.2em;
   padding: 10px 20px;
   transition: ease-in-out .4s;
   -webkit-transition: ease-in-out .4s;

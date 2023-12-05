@@ -1,17 +1,13 @@
 const loadUserProfile = () => {
-  // Intenta obtener los datos del usuario desde el localStorage
-  const storedUserData = sessionStorage.getItem("users");
+  // Intenta obtener los datos del usuario desde el sessionStorage
+  const storedUserData = sessionStorage.getItem("loggedInUser");
 
   if (storedUserData) {
-    const userData = JSON.parse(storedUserData);
-
-    // Muestra la información del usuario en el HTML
+    const userLogged = JSON.parse(sessionStorage.getItem('loggedInUser'));
     const userInfoContainer = document.querySelector(".user-info");
     userInfoContainer.innerHTML = `
-      <p><strong>Name:</strong> ${userData.username}</p>
-      <p><strong>Email:</strong> ${userData.email}</p>
-      <!-- Otros campos de información personal -->
-    `;
+      <p><strong>Name:</strong> ${userLogged.username}</p>
+      <p><strong>Email:</strong> ${userLogged.email}</p>`;
   } else {
     // Si no hay datos almacenados, muestra un mensaje o realiza alguna acción predeterminada
     const userInfoContainer = document.querySelector(".user-info");
@@ -19,28 +15,114 @@ const loadUserProfile = () => {
   }
 };
 
-// Agrega esta función para cargar y mostrar los carritos pasados del usuario
 const loadPastCarts = () => {
-  // Simula la obtención de carritos pasados desde algún lugar (puede ser una API)
-  const pastCarts = [
-    { id: 1, date: "2023-01-01", total: 50.0 },
-    // Otros carritos pasados
-  ];
+  const storedUserData = localStorage.getItem("users");
 
-  // Muestra los carritos pasados en la lista HTML
-  const cartListContainer = document.getElementById("cart-list");
-  pastCarts.forEach((cart) => {
-    const cartItem = document.createElement("li");
-    cartItem.innerHTML = `
-      <p><strong>Date:</strong> ${cart.date}</p>
-      <p><strong>Total:</strong> $${cart.total.toFixed(2)}</p>
-      <!-- Otros detalles del carrito -->
-    `;
-    cartListContainer.appendChild(cartItem);
-  });
+  if (storedUserData) {
+    const users = JSON.parse(storedUserData);
+    const userLogged = users[0];
+    const pastCartsContainer = document.querySelector(".past-carts");
+
+    if (userLogged.purchaseHistory && userLogged.purchaseHistory.length > 0) {
+      pastCartsContainer.innerHTML = "<h3>Past Carts:</h3><ul><br>";
+
+      userLogged.purchaseHistory.forEach((cart) => {
+        const cartDate = cart.date;
+        const cartProducts = cart.products.map(product => `<li>Product ID: ${product.id}, Price: $${product.precio}, Quantity: ${product.count}</li>`).join('');
+        
+        // Calcular el precio total del carrito
+        const totalPrice = cart.products.reduce((total, product) => total + product.precio * product.count, 0).toFixed(2);
+
+        pastCartsContainer.innerHTML += `<li>${cartDate}, Total Price: $${totalPrice}<ul>${cartProducts}</ul></li><br>`;
+      });
+
+      pastCartsContainer.innerHTML += "</ul>";
+    } else {
+      pastCartsContainer.innerHTML = "<p>No past carts available.</p>";
+    }
+  }
 };
 
-// Llama a estas funciones al cargar la página
+
+// Edit User
+
+document.getElementById("editProfileButton").addEventListener("click", openModal);
+document.getElementById("editProfileModal").addEventListener("click", function(event) {
+  if (event.target === this) {
+    closeModal();
+  }
+});
+
+function closeModal() {
+  document.getElementById("editProfileModal").style.display = "none";
+}
+
+function openModal() {
+  document.getElementById("editProfileModal").style.display = "flex";
+}
+
+document.getElementById("editProfileForm").addEventListener("submit", function(event) {
+  event.preventDefault();
+  const newUsername = document.getElementById("newUsername").value;
+  const newEmail = document.getElementById("newEmail").value;
+  updateUserInfo(newUsername, newEmail);
+  closeModal();
+});
+
+
+function updateUserInfo(newUsername, newEmail, newPassword) {
+  const storedUserData = localStorage.getItem("users");
+  const storedUserSession = sessionStorage.getItem("loggedInUser");
+
+  if (storedUserData) {
+    const users = JSON.parse(storedUserData);
+    const userLogged = users[0];
+    userLogged.username = newUsername;
+    userLogged.email = newEmail;
+    userLogged.password = newPassword;
+
+    // Actualiza purchaseHistory si existe
+    if (userLogged.purchaseHistory && userLogged.purchaseHistory.length > 0) {
+      userLogged.purchaseHistory.forEach((cart) => {
+        cart.products.forEach((product) => {
+          product.userId.username = newUsername;
+          product.userId.email = newEmail;
+          product.userId.password = newPassword;
+        });
+      });
+    }
+
+    localStorage.setItem("users", JSON.stringify(users));
+    loadUserProfile();
+    loadPastCarts();
+  }
+
+  if (storedUserSession) {
+    const userLogged = JSON.parse(storedUserSession);
+    userLogged.username = newUsername;
+    userLogged.email = newEmail;
+    userLogged.password = newPassword;
+
+    // Actualiza purchaseHistory si existe
+    if (userLogged.purchaseHistory && userLogged.purchaseHistory.length > 0) {
+      userLogged.purchaseHistory.forEach((cart) => {
+        cart.products.forEach((product) => {
+          product.userId.username = newUsername;
+          product.userId.email = newEmail;
+          product.userId.password = newPassword;
+        });
+      });
+    }
+
+    sessionStorage.setItem("loggedInUser", JSON.stringify(userLogged));
+    loadUserProfile();
+    loadPastCarts();
+  }
+}
+
+
+
+// Load Methods on DOM loading
 document.addEventListener("DOMContentLoaded", () => {
   loadUserProfile();
   loadPastCarts();

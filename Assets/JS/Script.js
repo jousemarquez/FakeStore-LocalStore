@@ -10,7 +10,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const loginLogoutButton = document.getElementById('login-logout-button');
 
     if (loggedInUser) {
-        loggedInUserDisplay.textContent = `Welcome, ${loggedInUser}!`;
+        const parseUser = JSON.parse(loggedInUser);
+        loggedInUserDisplay.textContent = `Welcome, ${parseUser.username}!`;
         loginLogoutButton.textContent = "Logout";
     } else {
         loggedInUserDisplay.style.display = "none";

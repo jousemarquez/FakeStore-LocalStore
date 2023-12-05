@@ -79,12 +79,9 @@ document.getElementById('add-product-form').addEventListener('submit', function 
             })
             .catch(error => {
                 console.error('Error... Getting the full list of products from the API:', error);
-            })
-            .finally(() => {
-                reload();
             });
     }
-});
+})
 
 function validateProductForm(product) {
     if (!product.title || !product.price || !product.category || !product.description || !product.image) {
@@ -138,19 +135,21 @@ const filterProducts = () => {
 
 
 const getData = (data) => {
-    const modifiedProduct = JSON.parse(sessionStorage.getItem('modifiedProduct'));
-    const newProduct = JSON.parse(sessionStorage.getItem('newProduct'));
     let html = "";
     data.forEach((c) => {
         html += `<div class="product" value="${c.id}">`;
         html += `  <div class="product-content">`;
+        /* html += `    <a href="/product-details.html?id=${c.id}" class="product-img">`; */
         html += `    <div class="product-img" onclick="viewMore(${c.id})">`;
         html += `      <img src="${c.image}" alt="product image">`;
         html += `    </div>`;
         html += `    <div class="product-btns">`;
-        html += `      <button type="button" onclick="addToCart(${c.id}, ${(parseFloat(c.price) - (15 * parseFloat(c.price)) / 100).toFixed(2)})" class="btn-cart"> add to cart`;
+        html += `      <button type="button" onclick="addToCart(${c.id}, ${(
+            parseFloat(c.price) - (15 * parseFloat(c.price)) / 100
+        ).toFixed(2)})" class="btn-cart"> add to cart`;
         html += `        <span><i class="fas fa-plus"></i></span>`;
         html += `      </button>`;
+        /* html += `      <button type="button" onclick="individualPurchase(${c.id})" class="btn-buy"> buy now`; */
         html += `      <button type="button" onclick="openEditModal(${c.id})" class="btn-buy"> edit`;
         html += `      <button type="button" onclick="viewMore(${c.id})" class="btn-buy"> view more`;
         html += `        <span><i class="fas fa-shopping-cart"></i></span>`;
@@ -162,6 +161,7 @@ const getData = (data) => {
         html += `      <h2 class="sm-title">${c.category}</h2>`;
         html += `      <div class="rating.rate">`;
 
+        // Verificar si la propiedad rating está definida antes de usarla
         if (c.rating && Math.round(c.rating.rate)) {
             if (Math.round(c.rating.rate) === 5) {
                 for (let i = 0; i < 5; i++) {
@@ -173,7 +173,9 @@ const getData = (data) => {
                 }
                 html += `   <span><i class="far fa-star"></i></span>`;
             }
+            // Agrega lógica similar para otras calificaciones
         } else {
+            // Si rating no está definido, muestra un mensaje o realiza alguna acción predeterminada
             html += `   <span>No rating available</span>`;
         }
 
@@ -181,28 +183,16 @@ const getData = (data) => {
         html += `    </div>`;
         html += `    <a class="product-name">${c.title}</a>`;
         html += `    <p class="product-price">$ ${c.price}</p>`;
-        html += `    <p class="product-price">$ ${(parseFloat(c.price) - (15 * parseFloat(c.price)) / 100).toFixed(2)} </p>`;
+        html +=
+            `    <p class="product-price">$ ` +
+            (parseFloat(c.price) - (15 * parseFloat(c.price)) / 100).toFixed(2) +
+            ` </p>`;
         html += `  </div>`;
-
-        // Renderizar el producto modificado si existe
-        if (modifiedProduct && c.id == modifiedProduct.id) {
-            html += `<div class="modified-product">This product has been modified</div>`;
-        }
-
         html += `  <div class="off-info">`;
         html += `    <h2 class="sm-title">10% off</h2>`;
         html += `  </div>`;
         html += `</div>`;
     });
-
-    // Renderizar el nuevo producto si existe
-    if (newProduct) {
-        html += `<div class="product" value="${newProduct.id}">`;
-        // ... (resto del código para el nuevo producto)
-        html += `<div class="new-product">This is a new product</div>`;
-        html += `</div>`;
-    }
-
     document.getElementById("product-item").innerHTML = html;
 }
 
@@ -249,22 +239,9 @@ function openEditModal(productId) {
         .catch(error => {
             console.error('Error fetching products from API:', error);
         });
-
-    // Verificar si hay un producto modificado en el sessionStorage y guardarlo en el localStorage
-    const modifiedProduct = JSON.parse(sessionStorage.getItem('modifiedProduct'));
-    if (modifiedProduct) {
-        const products = JSON.parse(localStorage.getItem('products')) || [];
-        const updatedProducts = products.map(product => {
-            return product.id == modifiedProduct.id ? { ...product, ...modifiedProduct } : product;
-        });
-
-        localStorage.setItem('products', JSON.stringify(updatedProducts));
-        sessionStorage.removeItem('modifiedProduct');
-        getData(updatedProducts);
-    }
 }
 
-
+// Al enviar el formulario de edición
 document.getElementById('edit-product-form').addEventListener('submit', function (event) {
     event.preventDefault();
     const productId = document.getElementById('product-id').value;
@@ -281,14 +258,10 @@ document.getElementById('edit-product-form').addEventListener('submit', function
         return product.id == productId ? { ...product, ...editedProduct } : product;
     });
 
-    // Guardar el producto modificado en el sessionStorage
-    sessionStorage.setItem('modifiedProduct', JSON.stringify({ id: productId, ...editedProduct }));
-
     localStorage.setItem('products', JSON.stringify(updatedProducts));
     closeEditModal();
     getData(updatedProducts);
 })
-
 
 
 function getLocalProducts() {
@@ -307,20 +280,9 @@ function fillEditForm(product) {
     document.getElementById('image').value = product.image;
 }
 
-document.getElementById('edit_close-modal').addEventListener('click', function () {
-    const addProductModal = document.getElementById('edit_modal_container');
-    addProductModal.style.display = 'none';
-})
-
 function closeEditModal() {
     const editProductModal = document.getElementById('edit_close-modal');
-    editCloseModalBtn.addEventListener('click', function () {
-        // Obtén referencia al modal
-        const editModalContainer = document.getElementById('edit_modal_container');
-
-        // Establece el estilo de visualización del modal en "none" para ocultarlo
-        editModalContainer.style.display = 'none';
-    })
+    editProductModal.style.display = 'none';
 }
 
 // Cart
@@ -477,6 +439,7 @@ const check = (id) => {
             });
             sessionStorage.setItem("cart", JSON.stringify(data));
             handleCart();
+            /* individualPurchase(id); */
         }
     } else {
         alert("No hay productos en el cart");
@@ -499,68 +462,143 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function viewMore(id) {
     window.location = `./product.html?${id}`;
-}
-
-
-// Función para imprimir el carrito
-const printCarrito = async () => {
-    try {
-        const carritoProds = document.getElementById('list-cart');
-        let cart = JSON.parse(sessionStorage.getItem('cart')) || { products: [] };
-
-        // Clear the existing products in the cart before re-printing
-        carritoProds.innerHTML = '';
-
-        for (const productCart of cart.products) {
-            const id = productCart.id; // Assuming productCart has an "id" property
-            const product = await getProductById(id); // Assuming there's a function to get product details by ID
-
-            if (product) {
-                const prod = document.createElement('div');
-                prod.setAttribute('class', 'cart-product');
-                prod.setAttribute('value', id);
-
-                const img = document.createElement('div');
-                img.setAttribute('class', 'product-img');
-                const price = document.createElement('div');
-                price.setAttribute('class', 'product-price');
-                const quantity = document.createElement('div');
-                quantity.setAttribute('class', 'product-quantity');
-                const deleteBtn = document.createElement('button');
-                deleteBtn.setAttribute('class', 'btn-delete');
-                deleteBtn.innerText = 'Delete';
-
-                prod.appendChild(img);
-                prod.appendChild(price);
-                prod.appendChild(quantity);
-                prod.appendChild(deleteBtn);
-
-                const image = document.createElement('img');
-                image.setAttribute('src', product.image);
-                img.appendChild(image);
-
-                const priceTag = document.createElement('p');
-                priceTag.innerText = `$ ${product.price * productCart.quantity}`;
-                price.appendChild(priceTag);
-
-                const quantContent = quantity.appendChild(document.createElement('div'));
-                quantContent.innerText = productCart.quantity;
-
-                deleteBtn.addEventListener('click', () => {
-                    // Remove the product from the cart
-                    cart.products = cart.products.filter(p => p.id !== id);
-                    // Remove the product element from the DOM
-                    prod.remove();
-                    // Recalculate total price and update the price element
-                    calculateAndUpdateTotalPrice(cart);
-                    // Update session storage
-                    updateCart(cart);
-                });
-
-                carritoProds.appendChild(prod);
-            }
-        }
-    } catch (error) {
-        console.error("Error al imprimir productos del carrito", error);
-    }
 };
+
+/*
+const buy_cart = () => {
+    const userId = getUserId();
+
+    if (sessionStorage.getItem("cart") != null) {
+        const date = new Date();
+        let purchase = "";
+        let totalPrice = 0;
+        let cart = JSON.parse(sessionStorage.getItem("cart"));
+        cart.forEach((item, i) => {
+            purchase += `{productId:${item.id}, quantity:${item.count}}`;
+            totalPrice += item.price * item.count;
+            if ((cart.length - 1) !== i) {
+                purchase += ",";
+            }
+        });
+
+        document.getElementById("total-Products").innerHTML = 0;
+        document.getElementById("total-price").innerHTML = "$ 0";
+
+        document.getElementById("loading").style.display = "block";
+
+        // Obtener la información del usuario actual del localStorage
+        const usersData = localStorage.getItem("users");
+        if (usersData) {
+            const users = JSON.parse(usersData);
+            const currentUser = users[userId];
+
+            // Almacenar la compra dentro de las compras del usuario
+            if (!currentUser.purchases) {
+                currentUser.purchases = [];
+            }
+
+            const newPurchase = {
+                date: date.toLocaleDateString(),
+                products: [purchase],
+                totalPrice: totalPrice,
+            };
+
+            currentUser.purchases.push(newPurchase);
+
+            // Actualizar la información del usuario en el localStorage
+            users[userId] = currentUser;
+            localStorage.setItem("users", JSON.stringify(users));
+        }
+
+        fetch(`https://fakestoreapi.com/carts`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(
+                {
+                    userId: userId,
+                    date: date.toLocaleDateString(),
+                    products: [purchase],
+                }
+            ),
+        })
+            .then((response) => {
+                if (response.ok) {
+                    return response.json();
+                } else if (response.status === 404) {
+                    console.clear();
+                    throw new Error("Error 404: Resource not found");
+                } else if (response.status === 500) {
+                    console.clear();
+                    throw new Error("Server error");
+                } else {
+                    console.clear();
+                    throw new Error("Unknown error");
+                }
+            })
+            .then((json) => {
+                console.log(json);
+                sessionStorage.removeItem("cart");
+
+                // Store additional information in localStorage
+                const cartPurchased = {
+                    cartId: json.id,
+                    userId: userId,
+                    productIds: cart.map(item => item.id),
+                    totalPrice: totalPrice,
+                }
+                localStorage.setItem("cart_purchased", JSON.stringify(cartPurchased));
+            })
+            .catch((error) => console.log("ERROR ---->", error))
+            .finally(() => {
+                document.getElementById("loading").style.display = "none";
+                alert("Purchase successful");
+            });
+    } else {
+        alert("Error...No products in the cart");
+    }
+}
+ */
+
+// Cart
+
+/* const purchaseCart = () => {
+    if (sessionStorage.getItem("cart") != null) {
+        const fecha = new Date();
+        let compra = "";
+        let cart = JSON.parse(sessionStorage.getItem("cart"));
+        cart.forEach((c, i) => {
+            compra += `{productId:${c.id}, quantity:${c.count}}`;
+            if (cart.length - 1 !== i) {
+                compra += ",";
+            }
+        });
+        document.getElementById("total-Products").innerHTML = 0;
+        document.getElementById("total-price").innerHTML = "$ 0";
+
+        document.getElementById("loading").style.display = "block";
+        fetchData(`https://fakestoreapi.com/carts`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                userId: 1,
+                date: fecha.toLocaleDateString(),
+                products: [compra],
+            }),
+        })
+            .then((json) => {
+                console.log(json);
+                sessionStorage.removeItem("cart");
+            })
+            .catch((error) => console.log("ERROR ---->", error))
+            .finally(() => {
+                document.getElementById("loading").style.display = "none";
+                alert("Purchase completed successfully.");
+            });
+    } else {
+        alert("Error... The Cart is empty");
+    }
+} */

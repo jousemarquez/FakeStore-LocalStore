@@ -206,7 +206,7 @@ function handleLogin() {
         document.getElementById("loading").style.display = 'block';
         const users = JSON.parse(localStorage.getItem('users')) || [];
         const matchingUser = users.find(user => user.username === userLogin.value && user.password === passwordLogin.value);
-        sessionStorage.setItem('loggedInUser', matchingUser.username);
+        sessionStorage.setItem('loggedInUser', JSON.stringify(matchingUser));
         handleLoginResult(matchingUser);
         reload();
         document.getElementById("loading").style.display = 'none';
