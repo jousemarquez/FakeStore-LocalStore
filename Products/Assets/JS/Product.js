@@ -1,58 +1,189 @@
-// producto.js
+// Get el ID del product de la URL
+const urlParams = new URLSearchParams(window.location.search);
+const productId = urlParams.get("id");
 
-document.addEventListener("DOMContentLoaded", function () {
-    // Obtener el producto desde localStorage o la API
-    const productId = getProductIdFromURL();
-    const product = getProductById(productId);
+// Buscar el objeto en localStorage
 
-    if (product) {
-        // Actualizar la información en la página de detalle
-        updateProductDetail(product);
-    } else {
-        // Manejar el caso en que el producto no se encuentre
-        alert("Producto no encontrado");
-        window.location.href = "index.html"; // Redirigir a la página principal
-    }
-});
+const existProduct = localStorage.getItem(productId) !== null;
 
-function getProductIdFromURL() {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get("id");
+// Verificar si el result es negativo
+if (!existProduct) {
+  // Realizar la búsqueda en la API
+  fetch(`https://fakestoreapi.com/products/${productId}`)
+    .then((response) => response.json())
+    .then((product) => {
+      const productDetails = document.getElementById("product-details");
+      const title = document.createElement("h2");
+      title.textContent = product.title;
+      productDetails.appendChild(title);
+      const image = document.createElement("img");
+      image.src = product.image;
+      productDetails.appendChild(image);
+      const description = document.createElement("p");
+      description.textContent = product.description;
+      productDetails.appendChild(description);
+      const price = document.createElement("p");
+      price.textContent = `Price: $${product.price}`;
+      productDetails.appendChild(price);
+
+      // Add el botón de delete
+      const deleteButton = document.createElement("button");
+      deleteButton.textContent = "Eliminar";
+      productDetails.appendChild(deleteButton);
+
+      // Función para manejar el evento click del botón de delete
+      deleteButton.addEventListener("click", () => {
+        // Get el título del product
+        const productName = product.title;
+        // Buscar en la list de la API si hay algún product con el mismo título
+        fetch("https://fakestoreapi.com/products")
+          .then((response) => response.json())
+          .then((products) => {
+            const matchingProduct = products.find(
+              (p) => p.title === productName
+            );
+            // Si no hay coincidencia, almacenar el título del product en productsDeleted
+            if (!matchingProduct) {
+              let productsDeleted = localStorage.getItem("productsDeleted");
+              productsDeleted = productsDeleted
+                ? JSON.parse(productsDeleted)
+                : [];
+              productsDeleted.push(productName);
+              localStorage.setItem(
+                "productsDeleted",
+                JSON.stringify(productsDeleted)
+              );
+            } else {
+              // Si hay coincidencia, realizar una solicitud fetch DELETE para delete el product
+              const matchingProductId = matchingProduct.id;
+              fetch(`https://fakestoreapi.com/products/${matchingProductId}`, {
+                method: "DELETE",
+              })
+                .then((response) => response.json())
+                .then((deletedProduct) => {
+                  const deletedProductTitle = deletedProduct.title;
+                  // Almacenar el título del product en productsDeleted
+                  let productsDeleted = localStorage.getItem("productsDeleted");
+                  productsDeleted = productsDeleted
+                    ? JSON.parse(productsDeleted)
+                    : [];
+                  productsDeleted.push(deletedProductTitle);
+                  localStorage.setItem(
+                    "productsDeleted",
+                    JSON.stringify(productsDeleted)
+                  );
+                  // Update la interfaz de user o realizar otras acciones necesarias
+                  // Mostrar un mensaje de éxito
+                  alert(
+                    `El product "${deletedProductTitle}" ha sido eliminado.`
+                  );
+                  window.location.href = "../index.html";
+                })
+                .catch((error) => console.log(error));
+            }
+          })
+          .catch((error) => console.log(error));
+      });
+    })
+    .catch((error) => console.log(error));
+} else {
+  const product = JSON.parse(localStorage.getItem(productId));
+  // Add elementos HTML para show los detalles del product desde localStorage
+
+  const productDetails = document.getElementById("product-details");
+  const title = document.createElement("h2");
+  title.textContent = product.title;
+  productDetails.appendChild(title);
+  const image = document.createElement("img");
+  image.src = product.image;
+  productDetails.appendChild(image);
+  const description = document.createElement("p");
+  description.textContent = product.description;
+  productDetails.appendChild(description);
+  const price = document.createElement("p");
+  price.textContent = `Price: $${product.price}`;
+  productDetails.appendChild(price);
+
+  const deleteButton = document.createElement("button");
+  deleteButton.textContent = "Eliminar";
+  productDetails.appendChild(deleteButton);
+
+  deleteButton.addEventListener("click", () => {
+    // Eliminar el product del LocalStorage
+    localStorage.removeItem(productId);
+
+    // Get los products del LocalStorage
+    const products = JSON.parse(localStorage.getItem("products"));
+
+    // Filtrar los products y delete el que tenga la ID 69
+    const newProducts = products.filter(
+      (product) => product.id === productId
+    );
+
+    // Guardar los new products en el LocalStorage
+    localStorage.setItem("products", JSON.stringify(newProducts));
+
+    alert(`El product "${product.title}" ha sido eliminado.`);
+    window.location.href = "../index.html";
+  });
 }
 
-function getProductById(productId) {
-    // Intentar obtener el producto de localStorage
-    const localStorageProducts = JSON.parse(localStorage.getItem('products')) || [];
-    const productFromLocalStorage = localStorageProducts.find(product => product.id === parseInt(productId));
+function updateProduct() {
+  const productData = {
+    title: document.getElementById("title").value,
+    price: parseFloat(document.getElementById("price").value),
+    description: document.getElementById("description").value,
+    image: document.getElementById("image").value,
+    category: document.getElementById("category").value,
+  };
 
-    if (productFromLocalStorage) {
-        return productFromLocalStorage;
-    }
+  fetch(`https://fakestoreapi.com/products/${productId}`, {
+    method: "PUT",
+    body: JSON.stringify({
+      id: productId,
+      title: "test product",
+      price: 13.5,
+      description: "lorem ipsum set",
+      image: "https://www.shutterstock.com/image-vector/thinking-man-question-marks-vector-260nw-2162774881.jpg",
+      category: "electronic",
+    }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      // Extraer la ID del product actualizado
+      const id = data.id;
 
-    // Si el producto no se encuentra en localStorage, buscar en la API
-    const apiUrl = `https://fakestoreapi.com/products/${productId}`;
-    return fetchData(apiUrl);
-}
+      // Segunda solicitud GET para get la información actualizada del product
+      fetch(`https://fakestoreapi.com/products/${id}`)
+        .then((response) => response.json())
+        .then((updatedProduct) => {
+          const title = updatedProduct.title;
+          // Almacenar el result en localStorage con la clave "productsDeleted"
+          let deletedGuardados =
+            JSON.parse(localStorage.getItem("productsDeleted")) || [];
+          deletedGuardados.push(title);
+          localStorage.setItem(
+            "productsDeleted",
+            JSON.stringify(deletedGuardados)
+          );
+          console.log(
+            "Product actualizado almacenado en localStorage:",
+            updatedProduct
+          );
+          location.reload();
+        })
+        .catch((error) =>
+          console.error("Error al get el product actualizado:", error)
+        );
+    });
 
-function updateProductDetail(product) {
-    // Actualizar la información en la página de detalle
-    document.getElementById("product-image").src = product.image;
-    document.getElementById("product-title").innerText = product.title;
-    document.getElementById("product-price").innerText = `$ ${product.price}`;
-    document.getElementById("product-description").innerText = product.description;
-    // Puedes agregar más actualizaciones según sea necesario
-}
+  // Guardar la información específica del product en localStorage
+  localStorage.setItem(`${productId}`, JSON.stringify(productData));
 
-async function fetchData(url) {
-    try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error("Error en la solicitud");
-        }
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        console.error("Error fetching data:", error);
-        return null;
-    }
+  let productsGuardados = JSON.parse(localStorage.getItem("products")) || [];
+  productsGuardados.push(productData);
+  localStorage.setItem("products", JSON.stringify(productsGuardados));
 }
