@@ -2,17 +2,13 @@
 <html lang="es">
 
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" type="image/jpg" href="../Assets/img/logo.jpg">
-    <link rel="stylesheet" href="./Assets/CSS/main.css">
-    <link rel="stylesheet" href="../Assets/CSS/style.css">
-    <link rel="stylesheet" href="./Assets/CSS/filter.css">
-    <link rel="stylesheet" href="./Assets/CSS/modal-product.css">
-    <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.1.1/css/all.css"
-    integrity="sha384-/frq1SRXYH/bSyou/HUp/hib7RVN1TawQYja658FEOodR/FQBKVqT9Ol+Oz3Olq5" crossorigin="anonymous"> -->
-    <title>FakeShop | Products</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu desplegable</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="./Assets/CSS/style.css">
 </head>
 
 <body>
@@ -20,47 +16,40 @@
         <div class="wrapper" id="wrapper">
             <nav class="navbar">
                 <div class="brand">
-                    <a href="../index.html">
-                        <h2><span id="fake">FAKE</span><span id="raya">-</span><span id="store">STORE</span></h2>
+                    <a href="./index.html">
+                        <h2><span id="fake">FAKE</span><span id="raya">-</span><span id="store">SHOP</span></h2>
                     </a>
                 </div>
                 <ul class="menu">
-                    <li><a href="../index.html">Home</a></li>
-                    <li><a class="active" href="./index.html">Products</a></li>
+                    <li><a class="active" href="./index.html">Home</a></li>
+                    <li><a active href="/Products/index.html">Products</a></li>
                     <li><a href="../Clients/index.html">Clients</a></li>
                     <li><a href="../User/user.html"><i class="fa-solid fa-user fa-2xs"></i></a></li>
                     <li>
                         <div id="loggedInUserDisplay"></div>
                     </li>
-                    <li class="menu__item">
+                    <li class="submenu">
+                        <img src="assets/img/cart.png" id="img-carrito">
+                        <div id="carrito">
 
-                        <div class="two columns u-pull-right">
-                            <ul>
-                                <li class="submenu">
-                                    <img src="./Assets/img/cart.png" alt="cart" id="img-cart">
-                                    <div id="cart">
-                                        <table id="list-cart" class="u-full-width">
-                                            <caption>Cart</caption>
-                                            <thead>
-                                                <tr>
-                                                    <th>Image</th>
-                                                    <th>Name</th>
-                                                    <th>Price</th>
-                                                    <th>Amount</th>
-                                                    <th>Price Total</th>
-                                                    <th></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody></tbody>
-                                        </table>
-                                        <p>TOTAL: <span id="total-price"></span></p>
-                                        <button onclick="purchaseCart()">Buy Now</button>
-                                        <button onclick="deleteCart()">Delete Cart</button>
-                                    </div>
-                                </li>
-                            </ul>
+                            <table id="lista-carrito" class="u-full-width">
+                                <thead>
+                                    <tr>
+                                        <th>Imagen</th>
+                                        <th>Nombre</th>
+                                        <th>Precio</th>
+                                        <th>Cantidad</th>
+                                        <th>Precio Total</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                            <p>TOTAL: <span id="precio-total"></span></p>
+                            <a href="#" id="vaciar-carrito" class="button u-full-width">Vaciar Carrito</a>
+                            <a href="#" id="confirmar-compra" class="button u-full-width">Confirmar compra</a>
                         </div>
-
+                    </li>
                     <li><button type="button" id="login-logout-button">Login</button></li>
                 </ul>
                 <div class="hamburger-menu">
@@ -71,136 +60,63 @@
             </nav>
         </div>
     </header>
-    <div class="products">
-        <div class="container">
-            <h1 class="lg-title">Our Products</h1>
-            <button id="add-product-button">Add New Product</button>
-            <div class="wrapper2">
-                <nav>
-                    <div class="items" id="items">
-                        <span class="item active" data-name="all">All</span>
-                    </div>
-                </nav>
-            </div>
-            <div class="product-items" id="product-item">
-            </div>
-        </div>
-    </div>
-    <footer class="footer"> <!-- Pie de página -->
-        <div class="footer-content">
-            <h2>Jouse Márquez</h2>
-            <h5>Frontend Developer</h5>
-        </div>
-        <div class="social-network"> <!-- Redes sociales -->
-            <a href="https://github.com/jousemarquez" target="_blank"><i class="fa-brands fa-github-square"></i></a>
-            <a href="https://www.instagram.com/jousemarquez/" target="_blank"><i class="fa-brands fa-instagram"></i></a>
-        </div>
-    </footer>
 
-    <!-- MODAL -->
-
-    <div class="cart-main">
-        <div class="cart" id="my-cart">
-            <table class="table">
-                <caption>Cart</caption>
-                <tbody>
-                    <tr>
-                        <th>Quantity:</th>
-                        <td><span id="total-Products">0</span></td>
-                    </tr>
-                    <tr>
-                        <th>Total:</th>
-                        <td id="total-price">$ <span id="total">0</span></td>
-                    </tr>
-                    <tr>
-                        <th>Delete</th>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="">
-                <button onclick="purchaseCart()">Buy Now</button>
-                <button onclick="deleteCart()">Delete Cart</button>
-            </div>
-        </div>
+    <div class="menu__hamburguer">
+        <img src="assets/menu.svg" class="menu__img">
     </div>
 
-    <!-- Add product Modal -->
+    </section>
 
-    <div class="modal-container" id="modal_container" style="display:none">
-        <div class="modal-content">
-            <span class="close" id="close-modal">&times;</span>
-            <h2>Add New Product</h2>
-            <form id="add-product-form">
-                <label for="title">Title:</label>
-                <input type="text" id="title" name="title" placeholder="Title" required>
 
-                <label for="price">Price:</label>
-                <input type="number" id="price" name="price" placeholder="price" required>
+    </nav>
+    <!-- <div class="category-bar">
+        <a href="#" onclick="mostrarTodosLosProductosPorCategorias('all')">Todos</a>
+        <a href="#" onclick="mostrarProductosPorCategoria('electronics')">Electronicos</a>
+        <a href="#" onclick="mostrarProductosPorCategoria('jewelery')">Joyeria</a>
+        <a href="#" onclick="mostrarProductosPorCategoria('men\'s clothing')">Ropa Hombre</a>
+        <a href="#" onclick="mostrarProductosPorCategoria('women\'s clothing')">Ropa Mujer</a>
+    </div> -->
 
-                <div>
-                    <label for="category">Username</label>
-                    <select name="category" id="category" required>
-                        <option value="electronics">Electronics</option>
-                        <option value="jewelery">Jewelery</option>
-                        <option value="men's clothing">Men's clothing</option>
-                        <option value="women's clothing">Women's clothing</option>
-                    </select>
-                </div>
+    <div id="lista-cursos" class="container">
+        <div class="lista-cursos" id="product-cards"></div>
+    </div>
 
-                <label for="description">Description:</label>
-                <textarea id="description" name="description" placeholder="description" required></textarea>
+    <div class="" id="createProducts">
+        <div>
+            <h1>Crear Producto</h1>
+            <form id="product-form">
+                <label for="title">Título:</label>
+                <input type="text" id="title" name="title" required><br>
 
-                <label for="image">Image URL:</label>
-                <input type="url" id="image" name="image" placeholder="image url" required>
+                <label for="price">Precio:</label>
+                <input type="number" id="price" name="price" step="0.01" required><br>
 
-                <button type="submit">Add Product</button>
+                <label for="description">Descripción:</label>
+                <textarea id="description" name="description" required></textarea><br>
+
+                <label for="image">URL de la imagen:</label>
+                <input type="url" id="image" name="image"
+                    value="https://www.shutterstock.com/image-vector/thinking-man-question-marks-vector-260nw-2162774881.jpg"
+                    readonly><br>
+
+                <label for="category">Categoría:</label>
+                <select id="category" name="category" required>
+                    <option value="electronics">Electronic</option>
+                    <option value="jewelery">Jewelery</option>
+                    <option value="men's clothing">Men's Clothing</option>
+                    <option value="women's clothing">Women's Clothing</option>
+                </select><br>
+
+                <button type="submit">Crear</button>
             </form>
         </div>
     </div>
+    <script src="./Assets/JS/index.js"></script>
+    <script src="./Assets/JS/menu.js"></script>
 
-    <!-- Edit Product -->
-    <div class="modal-container" id="edit_modal_container" style="display:none">
-        <div class="modal-content">
-            <span class="close" id="edit_close-modal">&times;</span>
-            <h2>Edit Product</h2>
-            <form id="edit-product-form">
-                <input type="hidden" id="product-id" name="product-id">
+    <script src="./Assets/JS/app.js"></script>
+    <script src="./Assets/JS/product.js"></script>
 
-                <label for="title">Title:</label>
-                <input type="text" id="title" name="title" placeholder="Title" required>
-
-                <label for="price">Price:</label>
-                <input type="number" id="price" name="price" placeholder="price" required>
-
-                <div>
-                    <label for="category">Category:</label>
-                    <select name="category" id="category" required>
-                        <option value="electronics">Electronics</option>
-                        <option value="jewelery">Jewelery</option>
-                        <option value="men's clothing">Men's clothing</option>
-                        <option value="women's clothing">Women's clothing</option>
-                    </select>
-                </div>
-
-                <label for="description">Description:</label>
-                <textarea id="description" name="description" placeholder="description" required></textarea>
-
-                <label for="image">Image URL:</label>
-                <input type="url" id="image" name="image" placeholder="image url" required>
-
-                <button type="submit">Edit Product</button>
-            </form>
-        </div>
-    </div>
-
-
-
-    <div id="loading" style="display:none">
-        <div class="icono"></div>
-    </div>
-    <script src="../Assets/JS/Script.js" defer></script>
-    <script src="./Assets/JS/Script.js" defer></script>
-    <!-- <script src="./Assets/JS/Product.js" defer></script> -->
 </body>
 
 </html>

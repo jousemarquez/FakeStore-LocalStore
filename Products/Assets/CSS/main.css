@@ -349,12 +349,12 @@ img {
     z-index: 1;
 }
 
-.submenu #cart {
+.submenu .cart {
     display: none;
     z-index: 1;
 }
 
-.submenu:hover #cart {
+.submenu:hover .cart {
     display: block;
     position: absolute;
     right: 0;

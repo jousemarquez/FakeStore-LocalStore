@@ -432,7 +432,7 @@ function deleteCart() {
 }
 
 function reload() {
-    window.location = "./index.html";
+    window.location = `./product.html?id=${id}`;
 }
 
 const getUserId = () => {
@@ -457,32 +457,6 @@ const handleCart = () => {
     document.getElementById("total-price").innerHTML = "$ " + total.toFixed(1);
 }
 
-const check = (id) => {
-    if (sessionStorage.getItem("cart") !== null) {
-        let cart = JSON.parse(sessionStorage.getItem("cart"));
-        let encontrado = false;
-        cart.forEach((c) => {
-            if (c.id === id) {
-                encontrado = true;
-            }
-        });
-        if (encontrado) {
-            alert("El producto ya está en el cart");
-        } else {
-            let data = JSON.parse(sessionStorage.getItem("cart"));
-            data.push({
-                id: id,
-                count: 0,
-                precio: 0,
-            });
-            sessionStorage.setItem("cart", JSON.stringify(data));
-            handleCart();
-        }
-    } else {
-        alert("No hay productos en el cart");
-    }
-}
-
 elements.filterItem.addEventListener("click", updateFilter);
 filterProducts();
 
@@ -501,9 +475,7 @@ function viewMore(id) {
     window.location = `./product.html?id=${id}`;
 }
 
-
-// Función para imprimir el carrito
-const printCarrito = async (cart) => {
+const printCarrito = async () => {
     try {
         const carritoProds = document.getElementById('list-cart');
         let cart = JSON.parse(sessionStorage.getItem('cart')) || { products: [] };
@@ -516,51 +488,86 @@ const printCarrito = async (cart) => {
             const product = await getProductById(id); // Assuming there's a function to get product details by ID
 
             if (product) {
-                const prod = document.createElement('div');
-                prod.setAttribute('class', 'cart-product');
-                prod.setAttribute('value', id);
+                const row = carritoProds.insertRow();
 
-                const img = document.createElement('div');
-                img.setAttribute('class', 'product-img');
-                const price = document.createElement('div');
-                price.setAttribute('class', 'product-price');
-                const quantity = document.createElement('div');
-                quantity.setAttribute('class', 'product-quantity');
+                // Columna de Imagen
+                const imgCell = row.insertCell();
+                const img = document.createElement('img');
+                img.src = product.image;
+                img.alt = product.title;
+                img.style.width = '50px';
+                img.style.height = '50px';
+                imgCell.appendChild(img);
+
+                // Columna de Nombre
+                const nameCell = row.insertCell();
+                nameCell.textContent = product.title;
+
+                // Columna de Precio
+                const priceCell = row.insertCell();
+                priceCell.textContent = `$${product.price}`;
+
+                // Columna de Cantidad
+                const quantityCell = row.insertCell();
+                quantityCell.textContent = productCart.quantity;
+
+                // Columna de Precio Total
+                const totalPriceCell = row.insertCell();
+                const totalPrice = product.price * productCart.quantity;
+                totalPriceCell.textContent = `$${totalPrice.toFixed(2)}`;
+
+                // Columna de Botón de Eliminar
+                const deleteCell = row.insertCell();
                 const deleteBtn = document.createElement('button');
-                deleteBtn.setAttribute('class', 'btn-delete');
-                deleteBtn.innerText = 'Delete';
-
-                prod.appendChild(img);
-                prod.appendChild(price);
-                prod.appendChild(quantity);
-                prod.appendChild(deleteBtn);
-
-                const image = document.createElement('img');
-                image.setAttribute('src', product.image);
-                img.appendChild(image);
-
-                const priceTag = document.createElement('p');
-                priceTag.innerText = `$ ${product.price * productCart.quantity}`;
-                price.appendChild(priceTag);
-
-                const quantContent = quantity.appendChild(document.createElement('div'));
-                quantContent.innerText = productCart.quantity;
-
+                deleteBtn.textContent = 'Delete';
                 deleteBtn.addEventListener('click', () => {
                     // Remove the product from the cart
                     cart.products = cart.products.filter(p => p.id !== id);
-                    // Remove the product element from the DOM
-                    prod.remove();
                     // Recalculate total price and update the price element
                     calculateAndUpdateTotalPrice(cart);
                     // Update session storage
                     updateCart(cart);
+                    // Reprint the cart after deletion
+                    printCarrito();
                 });
-
-                carritoProds.appendChild(prod);
+                deleteCell.appendChild(deleteBtn);
             }
         }
+
+        // Calcular y mostrar el precio total después de imprimir los productos
+        calculateAndUpdateTotalPrice(cart);
     } catch (error) {
         console.error("Error al imprimir productos del carrito", error);
     }
+};
+
+// Función para obtener detalles de un producto por su ID
+const getProductById = async (productId) => {
+    try {
+        // Intentar obtener el producto de la API
+        const apiResponse = await fetchData(`https://fakestoreapi.com/products/${productId}`);
+        const apiProduct = apiResponse || null;
+
+        // Intentar obtener el producto del almacenamiento local
+        const localProducts = JSON.parse(localStorage.getItem('products')) || [];
+        const localProduct = localProducts.find(product => product.id == productId) || null;
+
+        // Devolver el producto de la API si existe, de lo contrario, devolver el producto local
+        return apiProduct || localProduct;
+    } catch (error) {
+        console.error('Error al obtener detalles del producto por ID:', error);
+        return null;
+    }
+};
+
+
+// Función para calcular y actualizar el precio total
+const calculateAndUpdateTotalPrice = (cart) => {
+    const totalCell = document.getElementById('total-price');
+    const totalPrice = cart.products.reduce((total, product) => {
+        const productDetails = getProductById(product.id); // Assuming there's a function to get product details by ID
+        return total + (productDetails ? productDetails.price * product.quantity : 0);
+    }, 0);
+
+    totalCell.textContent = `$${totalPrice.toFixed(2)}`;
 };
